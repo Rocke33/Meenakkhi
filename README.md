@@ -24,10 +24,6 @@ A full-stack e-commerce web platform tailored for premium saree retail, featurin
 - Node.js (v18.x or higher)
 - npm or yarn
 - A Supabase project instance
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone [https://github.com/YOUR_USERNAME/menakkhi-sarees.git](https://github.com/YOUR_USERNAME/menakkhi-sarees.git)
-   cd menakkhi-sarees
+  
+This project is licensed under the MIT License.
+Copyright © Developed by MD Rocke Ahamed
