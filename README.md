@@ -1,40 +1,33 @@
-# 🛒 Bongo Shop (Rocke Dev E-Commerce Hub)
+# 🌸 Menakkhi Sarees — E-Commerce Web Application
 
-A high-performance, full-stack Single Page Application (SPA) e-commerce hub engineered with a React/TypeScript frontend, Tailwind CSS, and a robust backend infrastructure powered by Supabase (PostgreSQL). The application features smooth client-side routing, live payment verification flows, real-time database functions, and optimized deployment configurations on Vercel.
+A full-stack e-commerce web platform tailored for premium saree retail, featuring real-time inventory management, university campus delivery routing, and Bangladeshi mobile payment integrations.
 
-🌐 **Live Application:** [bongo-shop-nu.vercel.app](https://bongo-shop-nu.vercel.app/)
+## ✨ Key Features
 
----
+- 🛍️ **Dynamic Product Catalog & Collections**: Browse sarees by categories with quick preview and search capabilities.
+- ⚡ **Real-time Cart Management**: Powered by Supabase Realtime for instant badge count updates and interactive visual feedback across tabs.
+- 🎓 **Campus & Home Delivery Routing**: Specialized checkout options for University Campuses (including pre-configured halls for Jahangirnagar University & Dhaka University) as well as standard home delivery.
+- 💳 **Local Payment Integration**: Native support for **Cash on Delivery (COD)**, **bKash**, and **Nagad** with manual TrxID verification workflows.
+- 🛡️ **Role-Based Authentication**: Secure user profile management and protected routes for administrators and customers.
+- ⚙️ **Admin Dashboard**: Comprehensive order processing and inventory control.
 
-## 🚀 Core Technical Features
+## 🛠️ Tech Stack
 
-*   **Advanced Database Aggregations (Supabase RPCs):** Implemented highly performant custom database functions to compile real-time tracking for the "Top Sales" catalog stream, securely bypassing strict Row Level Security (RLS) constraints for unauthorized guest views.
-*   **Dynamic Client-Side Routing:** Configured production-grade distributed single-page rewrite fallbacks via a custom `vercel.json` architecture to guarantee zero `404 Not Found` navigation dropouts upon hard page refreshes.
-*   **Interactive UI/UX & Global Search:** Designed a responsive, viewport-synchronized contextual framework allowing live catalog queries across next-gen electronics, apparel, and lifestyle items.
-*   **End-To-End Secure Purchase Flows:** Built a comprehensive checkout handling structural validation, automated cart teardowns, and live Bangladeshi mobile financial services verification references (bKash, Nagad, Cash on Delivery).
-*   **Administrative Inventory Management:** Features an integrated Admin Control interface for real-time item configurations and core order tracking pipelines.
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS
+- **Routing**: React Router DOM v6
+- **Backend & Database**: Supabase (PostgreSQL, Authentication, Realtime Channels)
+- **Deployment**: Vercel / Netlify
 
----
+## 🚀 Getting Started
 
-## 🛠️ The Modern Tech Stack
+### Prerequisites
+- Node.js (v18.x or higher)
+- npm or yarn
+- A Supabase project instance
 
-*   **Frontend UI Layer:** React (Vite ecosystem), TypeScript
-*   **Styling Engine:** Tailwind CSS (Modern responsive utility layouts)
-*   **Backend & Database:** Supabase (PostgreSQL relational architecture with RPC triggers)
-*   **Hosting & Operations:** Vercel Global Edge Network
+### Installation
 
----
-
-## 📦 Repository Architecture
-
-```text
-├── public/                 # Static graphical assets
-├── src/
-│   ├── components/         # Reusable application components (CheckoutForm, etc.)
-│   ├── pages/              # Structured view panels (Home, Products, Profile, Admin)
-│   ├── supabaseClient.ts   # Client wrapper interface configuration
-│   ├── App.tsx             # Main core application router layout container
-│   └── main.tsx            # Global entry point mounting execution
-├── vercel.json             # Single Page Application rewrite rules & cache routing
-├── package.json            # Package dependencies 
-└── README.md               # Repository documentation
+1. **Clone the repository**
+   ```bash
+   git clone [https://github.com/YOUR_USERNAME/menakkhi-sarees.git](https://github.com/YOUR_USERNAME/menakkhi-sarees.git)
+   cd menakkhi-sarees
