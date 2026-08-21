@@ -149,8 +149,9 @@ export default function Admin() {
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminPassword === 'Meenakkhi&&cse33') {
+    if (adminPassword ==='Meenakkhi&&cse33') {
       setIsAdminAuthenticated(true);
+      localStorage.setItem('menakkhi_admin_auth', 'true');
       setAuthError('');
     } else {
       setAuthError('❌ Invalid Administrative Password. Access Denied.');

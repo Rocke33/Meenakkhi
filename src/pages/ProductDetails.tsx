@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import Navbar from '../components/Navbar';
@@ -7,6 +7,12 @@ import { formatBDT } from '../types/database';
 import type { Product, ProductComment } from '../types/database';
 import { getErrorMessage } from '../utils/errorHandling';
 import { useCart } from '../context/CartContext';
+
+interface AdditionalImage {
+  id: number;
+  product_id: number;
+  image_url: string;
+}
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -20,6 +26,20 @@ export default function ProductDetails() {
   const [statusMessage, setStatusMessage] = useState<string>('');
   const [isAddedSuccess, setIsAddedSuccess] = useState<boolean>(false);
 
+  // Gallery & Image Management
+  const [additionalImages, setAdditionalImages] = useState<AdditionalImage[]>([]);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [uploadingImage, setUploadingImage] = useState<boolean>(false);
+  const [deletingImageId, setDeletingImageId] = useState<number | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Admin Verification State
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+
+  // Swipe gesture ref
+  const touchStartX = useRef<number>(0);
+  const touchEndX = useRef<number>(0);
+
   // Dynamic Comments & Rating
   const [commentsList, setCommentsList] = useState<ProductComment[]>([]);
   const [averageRating, setAverageRating] = useState<number>(5.0);
@@ -29,6 +49,30 @@ export default function ProductDetails() {
   const [userRating, setUserRating] = useState<number>(5);
   const [userText, setUserText] = useState<string>('');
   const [submittingComment, setSubmittingComment] = useState<boolean>(false);
+
+  // Check if admin is authenticated from local key/session
+  useEffect(() => {
+    const adminSession = localStorage.getItem('menakkhi_admin_auth');
+    if (adminSession === 'true') {
+      setIsAdmin(true);
+    }
+  }, []);
+
+  const fetchAdditionalImages = async (productId: number) => {
+    try {
+      const { data, error } = await supabase
+        .from('product_images')
+        .select('*')
+        .eq('product_id', productId)
+        .order('id', { ascending: true });
+
+      if (!error && data) {
+        setAdditionalImages(data as AdditionalImage[]);
+      }
+    } catch (err) {
+      console.error('Error fetching additional images:', getErrorMessage(err));
+    }
+  };
 
   const fetchCommentsAndRatings = async () => {
     setLoadingComments(true);
@@ -69,6 +113,7 @@ export default function ProductDetails() {
         console.error('Error fetching product:', error.message);
       } else if (data) {
         setProduct(data as Product);
+        await fetchAdditionalImages(data.id);
       }
       setLoading(false);
     };
@@ -78,6 +123,125 @@ export default function ProductDetails() {
       fetchCommentsAndRatings();
     }
   }, [id]);
+
+  // Combine Primary + Additional Images (Max 4 Total)
+  const allImages = product
+    ? [
+        { id: -1, isPrimary: true, url: product.image_url },
+        ...additionalImages.map((img) => ({ id: img.id, isPrimary: false, url: img.image_url })),
+      ]
+    : [];
+
+  const handleNextImage = () => {
+    if (allImages.length <= 1) return;
+    setCurrentIndex((prev) => (prev + 1) % allImages.length);
+  };
+
+  const handlePrevImage = () => {
+    if (allImages.length <= 1) return;
+    setCurrentIndex((prev) => (prev - 1 + allImages.length) % allImages.length);
+  };
+
+  // Mobile Touch Handlers for Carousel Swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    if (distance > 50) {
+      handleNextImage(); // Swiped Left
+    } else if (distance < -50) {
+      handlePrevImage(); // Swiped Right
+    }
+    touchStartX.current = 0;
+    touchEndX.current = 0;
+  };
+
+  // Image Upload Handler
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !product) return;
+
+    if (additionalImages.length >= 3) {
+      alert('⚠️ Maximum limit reached! A product can have 1 primary image and up to 3 additional images (Total 4).');
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      alert('❌ Please select a valid image file (JPEG, PNG, WEBP, etc.).');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+      const filePath = `sarees/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('products')
+        .upload(filePath, file);
+
+      if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
+
+      const { data: urlData } = supabase.storage.from('products').getPublicUrl(filePath);
+      const publicUrl = urlData.publicUrl;
+
+      const { data: dbData, error: dbError } = await supabase
+        .from('product_images')
+        .insert([{ product_id: product.id, image_url: publicUrl }])
+        .select();
+
+      if (dbError) throw dbError;
+
+      if (dbData) {
+        setAdditionalImages((prev) => [...prev, dbData[0] as AdditionalImage]);
+        setCurrentIndex(additionalImages.length + 1); // Focus newly uploaded image
+      }
+    } catch (err: unknown) {
+      alert(`❌ ${getErrorMessage(err)}`);
+    } finally {
+      setUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  // Image Delete Handler (Protected against Primary Image)
+  const handleDeleteImage = async (imageId: number, imageUrl: string, isPrimary: boolean) => {
+    if (isPrimary) {
+      alert('🔒 Primary image cannot be deleted.');
+      return;
+    }
+
+    if (!confirm('Are you sure you want to delete this additional photo?')) return;
+
+    setDeletingImageId(imageId);
+    try {
+      // Extract storage path from URL if hosted on Supabase Storage
+      if (imageUrl.includes('/products/sarees/')) {
+        const path = imageUrl.split('/products/')[1];
+        if (path) {
+          await supabase.storage.from('products').remove([path]);
+        }
+      }
+
+      const { error } = await supabase.from('product_images').delete().eq('id', imageId);
+      if (error) throw error;
+
+      setAdditionalImages((prev) => prev.filter((img) => img.id !== imageId));
+      setCurrentIndex(0); // Reset viewer to primary image
+    } catch (err: unknown) {
+      alert(`❌ Failed to delete image: ${getErrorMessage(err)}`);
+    } finally {
+      setDeletingImageId(null);
+    }
+  };
 
   const handleAddToCart = async () => {
     setCartLoading(true);
@@ -92,7 +256,6 @@ export default function ProductDetails() {
     }
 
     try {
-      // Check existing
       const { data: existing } = await supabase
         .from('cart_items')
         .select('id, quantity')
@@ -117,8 +280,8 @@ export default function ProductDetails() {
         if (error) throw error;
       }
 
-        triggerCartAlert();
-        await refreshCart();
+      triggerCartAlert();
+      await refreshCart();
       setIsAddedSuccess(true);
       setTimeout(() => setIsAddedSuccess(false), 3000);
     } catch (err: unknown) {
@@ -199,7 +362,7 @@ export default function ProductDetails() {
       <main className="flex-1 max-w-5xl w-full mx-auto px-3 sm:px-4 py-6 sm:py-12 space-y-6">
         
         {/* Navigation */}
-        <div className="flex justify-start">
+        <div className="flex justify-between items-center">
           <Link
             to="/products"
             className="inline-flex items-center gap-2 bg-rose-900 text-white hover:bg-rose-800 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl text-xs font-black uppercase tracking-wider transition active:scale-95 group"
@@ -207,6 +370,13 @@ export default function ProductDetails() {
             <span className="transition-transform group-hover:-translate-x-1">←</span>
             <span>Back to Collections</span>
           </Link>
+
+          {/* Toggle Admin Toolbar view if logged into Admin */}
+          {isAdmin && (
+            <span className="text-[10px] font-black uppercase tracking-wider bg-rose-100 text-rose-900 px-3 py-1.5 rounded-xl border border-rose-200">
+              👑 Admin Photo Mode Active
+            </span>
+          )}
         </div>
 
         {statusMessage && !isAddedSuccess && (
@@ -218,9 +388,122 @@ export default function ProductDetails() {
         {/* Primary Details Matrix */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-10 bg-white border border-rose-100 p-4 sm:p-8 rounded-3xl shadow-xs">
           
-          {/* Image Container */}
-          <div className="w-full h-64 sm:h-96 bg-rose-50/30 rounded-2xl p-4 flex items-center justify-center overflow-hidden border border-rose-100 shrink-0">
-            <img src={product.image_url} alt={product.title} className="max-h-full max-w-full object-contain" />
+          {/* Swipeable Carousel Container */}
+          <div className="flex flex-col gap-3 w-full">
+            <div 
+              className="relative w-full h-72 sm:h-96 bg-rose-50/30 rounded-2xl p-4 flex items-center justify-center overflow-hidden border border-rose-100 shrink-0 select-none touch-pan-y"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+            >
+              {allImages.length > 0 && (
+                <img 
+                  src={allImages[currentIndex]?.url} 
+                  alt={`${product.title} view ${currentIndex + 1}`} 
+                  className="max-h-full max-w-full object-contain transition-all duration-300 ease-in-out" 
+                />
+              )}
+
+              {/* Left/Right Desktop Controls */}
+          
+{allImages.length > 1 && (
+  <>
+    <button
+  onClick={handlePrevImage}
+  className="absolute left-3 top-1/2 -translate-y-1/2
+             w-9 h-9 sm:w-10 sm:h-10
+             rounded-full
+             bg-black text-white
+             flex items-center justify-center
+             text-2xl sm:text-3xl
+             font-bold
+             shadow-md
+             hover:bg-black/80
+             transition-all duration-200
+             cursor-pointer z-10"
+  aria-label="Previous Image"
+>
+  ‹
+</button>
+
+<button
+  onClick={handleNextImage}
+  className="absolute right-3 top-1/2 -translate-y-1/2
+             w-9 h-9 sm:w-10 sm:h-10
+             rounded-full
+             bg-black text-white
+             flex items-center justify-center
+             text-2xl sm:text-3xl
+             font-bold
+             shadow-md
+             hover:bg-black/80
+             transition-all duration-200
+             cursor-pointer z-10"
+  aria-label="Next Image"
+>
+  ›
+</button>
+  </>
+)}
+
+              {/* Primary Image Badge */}
+        
+
+              {/* Delete Icon overlay on current additional photo for Admin */}
+              {isAdmin && !allImages[currentIndex]?.isPrimary && (
+                <button
+                  onClick={() => handleDeleteImage(allImages[currentIndex].id, allImages[currentIndex].url, false)}
+                  disabled={deletingImageId === allImages[currentIndex].id}
+                  className="absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white p-2 rounded-xl text-xs shadow-lg transition cursor-pointer flex items-center gap-1 font-bold"
+                  title="Delete image"
+                >
+                  {deletingImageId === allImages[currentIndex].id ? 'Deleting...' : 'Delete'}
+                </button>
+              )}
+            </div>
+
+            {/* Carousel Dots & Thumbnails Navigation */}
+            <div className="flex items-center justify-between gap-2 px-1">
+              <div className="flex items-center gap-2 overflow-x-auto py-1">
+                {allImages.map((img, idx) => (
+                  <button
+                    key={img.id}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 transition cursor-pointer shrink-0 ${
+                      currentIndex === idx ? 'border-rose-900 scale-105 shadow-xs' : 'border-gray-200 opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={img.url} alt="thumbnail" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+
+              {/* Admin Image Upload Action */}
+              {isAdmin && (
+                <div>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  {additionalImages.length < 3 ? (
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingImage}
+                      className="bg-emerald-700 hover:bg-emerald-800 text-white text-[10px] sm:text-xs font-black uppercase tracking-wider px-3 py-2.5 rounded-xl transition shadow-xs flex items-center gap-1.5 shrink-0 cursor-pointer disabled:opacity-50"
+                    >
+                      {uploadingImage ? 'Uploading...' : '＋ Upload Image'}
+                    </button>
+                  ) : (
+                    <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-2.5 py-1.5 rounded-lg border border-gray-200">
+                      Max 4 Photos Reached
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Details & Actions */}
