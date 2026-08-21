@@ -56,6 +56,12 @@ export default function Admin() {
   const [activeInvoiceOrder, setActiveInvoiceOrder] = useState<AdminOrder | null>(null);
 
   const [newCategoryName, setNewCategoryName] = useState<string>('');
+  
+  // Image input options: File upload or Direct URL
+  const [imageUploadType, setImageUploadType] = useState<'file' | 'url'>('file');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
+
   const [newProduct, setNewProduct] = useState({
     title: '',
     price: '',
@@ -143,7 +149,7 @@ export default function Admin() {
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminPassword === 'supersecretadmin123') {
+    if (adminPassword === 'Meenakkhi&&cse33') {
       setIsAdminAuthenticated(true);
       setAuthError('');
     } else {
@@ -202,30 +208,82 @@ export default function Admin() {
     setFormLoading(false);
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      setFilePreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newProduct.title || !newProduct.price || !newProduct.image_url || !newProduct.category) {
-      alert('Please fill in all saree attributes.');
+
+    if (!newProduct.title || !newProduct.price || !newProduct.category) {
+      alert('Please fill in all basic product fields.');
       return;
     }
-    setFormLoading(true);
-    const { data, error } = await supabase.from('products').insert([
-      {
-        title: newProduct.title,
-        price: parseFloat(newProduct.price),
-        description: newProduct.description,
-        image_url: newProduct.image_url,
-        category: newProduct.category,
-      },
-    ]).select();
 
-    if (error) alert(error.message);
-    else if (data) {
-      setProducts((prev) => [data[0], ...prev]);
-      setNewProduct({ title: '', price: '', description: '', image_url: '', category: '' });
-      alert('🎉 Saree product published successfully!');
+    if (imageUploadType === 'file' && !selectedFile) {
+      alert('Please choose an image file from your device.');
+      return;
     }
-    setFormLoading(false);
+
+    if (imageUploadType === 'url' && !newProduct.image_url) {
+      alert('Please enter a valid image URL.');
+      return;
+    }
+
+    setFormLoading(true);
+
+    try {
+      let finalImageUrl = newProduct.image_url;
+
+      // Handle direct file upload to Supabase Storage bucket ('products')
+      if (imageUploadType === 'file' && selectedFile) {
+        const fileExt = selectedFile.name.split('.').pop();
+        const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+        const filePath = `sarees/${fileName}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('products')
+          .upload(filePath, selectedFile);
+
+        if (uploadError) {
+          throw new Error(`Image Upload Failed: ${uploadError.message}. Make sure 'products' bucket exists in Supabase Storage.`);
+        }
+
+        const { data: urlData } = supabase.storage
+          .from('products')
+          .getPublicUrl(filePath);
+
+        finalImageUrl = urlData.publicUrl;
+      }
+
+      const { data, error } = await supabase.from('products').insert([
+        {
+          title: newProduct.title,
+          price: parseFloat(newProduct.price),
+          description: newProduct.description,
+          image_url: finalImageUrl,
+          category: newProduct.category,
+        },
+      ]).select();
+
+      if (error) throw error;
+
+      if (data) {
+        setProducts((prev) => [data[0], ...prev]);
+        setNewProduct({ title: '', price: '', description: '', image_url: '', category: '' });
+        setSelectedFile(null);
+        setFilePreview(null);
+        alert('🎉 Saree product published successfully!');
+      }
+    } catch (err: unknown) {
+      alert(getErrorMessage(err));
+    } finally {
+      setFormLoading(false);
+    }
   };
 
   const handleDeleteProduct = async (productId: number) => {
@@ -446,14 +504,58 @@ export default function Admin() {
                         ))}
                       </select>
                     </div>
-                    <input
-                      type="url"
-                      placeholder="Image URL"
-                      required
-                      className="w-full text-xs p-2.5 border border-gray-200 rounded-xl bg-gray-50/50"
-                      value={newProduct.image_url}
-                      onChange={(e) => setNewProduct({ ...newProduct, image_url: e.target.value })}
-                    />
+
+                    {/* Image Input Source Switcher */}
+                    <div className="border border-rose-100 bg-rose-50/30 p-3 rounded-2xl space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[10px] font-black uppercase text-rose-900">Saree Image Source</label>
+                        <div className="flex gap-1 text-[10px]">
+                          <button
+                            type="button"
+                            onClick={() => setImageUploadType('file')}
+                            className={`px-2 py-0.5 rounded-md font-bold transition cursor-pointer ${
+                              imageUploadType === 'file' ? 'bg-rose-950 text-white' : 'bg-gray-200 text-gray-600'
+                            }`}
+                          >
+                            📱 Device Photo
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setImageUploadType('url')}
+                            className={`px-2 py-0.5 rounded-md font-bold transition cursor-pointer ${
+                              imageUploadType === 'url' ? 'bg-rose-950 text-white' : 'bg-gray-200 text-gray-600'
+                            }`}
+                          >
+                            🔗 Web Link
+                          </button>
+                        </div>
+                      </div>
+
+                      {imageUploadType === 'file' ? (
+                        <div>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="w-full text-xs text-gray-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-rose-900 file:text-white hover:file:bg-rose-800 cursor-pointer"
+                          />
+                          {filePreview && (
+                            <div className="mt-2 relative w-16 h-16 rounded-xl overflow-hidden border border-rose-200">
+                              <img src={filePreview} alt="Preview" className="w-full h-full object-cover" />
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <input
+                          type="url"
+                          placeholder="Image URL (e.g., https://...)"
+                          className="w-full text-xs p-2.5 border border-gray-200 rounded-xl bg-white"
+                          value={newProduct.image_url}
+                          onChange={(e) => setNewProduct({ ...newProduct, image_url: e.target.value })}
+                        />
+                      )}
+                    </div>
+
                     <textarea
                       placeholder="Saree Weave Description & Details"
                       rows={3}
@@ -466,7 +568,7 @@ export default function Admin() {
                       disabled={formLoading}
                       className="w-full text-xs font-black uppercase tracking-wider bg-rose-900 text-white p-3 rounded-xl hover:bg-rose-800 transition disabled:opacity-50 cursor-pointer"
                     >
-                      🚀 Publish Live Saree
+                      {formLoading ? 'Uploading & Publishing...' : '🚀 Publish Live Saree'}
                     </button>
                   </form>
                 </div>
