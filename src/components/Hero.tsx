@@ -17,13 +17,13 @@ export default function Hero() {
         <div className="flex flex-col justify-center px-6 py-12 sm:px-12 sm:py-16 lg:px-16">
           <p className="mb-7 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.28em] text-brand-secondary/75">
             <span className="h-px w-10 bg-brand-secondary/60" />
-            A living textile tradition
+            Bengali sarees, thoughtfully chosen
           </p>
           <h1 className="max-w-xl font-serif text-4xl font-normal leading-[1.08] tracking-[-.04em] text-balance sm:text-6xl">
-            Wear a story that began by the river.
+            Sarees with a story in every thread.
           </h1>
           <p className="mt-6 max-w-lg text-sm leading-7 text-brand-secondary/80 sm:text-base">
-            Meenakkhi brings together heirloom sarees shaped by Bengali hands, patient looms, and motifs passed from one generation to the next.
+            Discover handpicked Bengali sarees shaped by patient looms, graceful drapes, and motifs passed from one generation to the next.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
             <button onClick={() => navigate('/products')} className="group inline-flex items-center justify-center gap-3 bg-brand-secondary px-6 py-3.5 text-xs font-bold uppercase tracking-[.16em] text-brand-primary-dark transition hover:bg-white">
@@ -43,7 +43,7 @@ export default function Hero() {
           <div className="absolute inset-5 border border-brand-primary/20 sm:inset-8" />
           <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-yAAraSTJgWL0fBXTs7m6TSshTN7QBJ.png" alt="Meenakkhi Bengali fish emblem" className="absolute inset-0 m-auto w-[78%] max-w-[430px] mix-blend-multiply" />
           <div className="absolute bottom-9 left-9 right-9 flex items-end justify-between sm:bottom-12 sm:left-12 sm:right-12">
-            <p className="max-w-[160px] font-serif text-lg leading-tight text-brand-primary-dark">The eye of the fish, the eye of the craft.</p>
+            <p className="max-w-[160px] font-serif text-lg leading-tight text-brand-primary-dark">The eye of the fish. The soul of the saree.</p>
             <span className="font-mono text-[10px] uppercase tracking-widest text-brand-primary/70">Est. 2024</span>
           </div>
         </div>
