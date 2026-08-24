@@ -171,7 +171,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   to="/register"
-                  className="text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 px-3.5 sm:px-4 py-2 rounded-xl shadow-md shadow-amber-500/20 transition active:scale-95"
+                  className="hidden sm:inline-flex text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 px-3.5 sm:px-4 py-2 rounded-xl shadow-md shadow-amber-500/20 transition active:scale-95"
                 >
                   Register
                 </Link>

@@ -116,7 +116,7 @@ export default function Home() {
   }, [allProducts, currentPage, itemsPerPage]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-stone-50 font-sans text-stone-900">
+    <div className="min-h-screen flex flex-col bg-brand-secondary font-sans text-brand-ink">
       
       {/* Sticky Glass Navbar */}
       <Navbar />
