@@ -116,7 +116,7 @@ export default function Home() {
   }, [allProducts, currentPage, itemsPerPage]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-stone-50 font-sans text-stone-900">
+    <div className="min-h-screen flex flex-col bg-brand-secondary font-sans text-brand-ink">
       
       {/* Sticky Glass Navbar */}
       <Navbar />
@@ -128,7 +128,7 @@ export default function Home() {
         </div>
       </div>
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 box-border">
+      <main className="flex-1 w-full max-w-7xl mx-auto px-3 py-4 box-border sm:px-6 sm:py-6">
         {isSearching && (
           <section id="search-view" className="my-6">
             <div className="flex items-center justify-between mb-6">
@@ -147,24 +147,27 @@ export default function Home() {
         {!isSearching && <Hero />}
 
         {/* Category Filter Pills */}
-        <section className="my-8">
-          <div className="flex flex-wrap justify-center gap-2 pb-4 border-b border-stone-200">
-            {categoriesList.map((category) => {
-              const active = selectedCategory === category;
-              return (
-                <button
-                  key={category}
-                  onClick={() => handleCategorySelect(category)}
-                  className={`px-4 py-2.5 text-xs font-bold rounded-xl border uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                    active
-                      ? 'bg-stone-900 text-amber-300 border-stone-900 shadow-sm'
-                      : 'bg-white text-stone-700 border-stone-200 hover:border-amber-400 hover:bg-stone-100/60'
-                  }`}
-                >
-                  {category}
-                </button>
-              );
-            })}
+        <section className="my-6 sm:my-8" aria-label="Saree categories">
+          <div className="flex flex-col gap-3 border-y border-brand-line/70 py-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-2">
+            <p className="px-1 text-[10px] font-bold uppercase tracking-[.22em] text-brand-primary-dark sm:mr-2">Shop by weave</p>
+            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-center">
+              {categoriesList.map((category) => {
+                const active = selectedCategory === category;
+                return (
+                  <button
+                    key={category}
+                    onClick={() => handleCategorySelect(category)}
+                    className={`min-h-11 rounded-sm border px-3 py-2 text-left text-[10px] font-bold uppercase tracking-[.12em] transition-all duration-200 cursor-pointer sm:px-4 sm:text-center ${
+                      active
+                        ? 'border-brand-primary-dark bg-brand-primary-dark text-brand-secondary shadow-[3px_3px_0_var(--color-brand-accent)]'
+                        : 'border-brand-line bg-brand-secondary text-brand-primary-dark hover:-translate-y-0.5 hover:border-brand-accent hover:text-brand-accent'
+                    }`}
+                  >
+                    {category}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </section>
 

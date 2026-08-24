@@ -1,89 +1,61 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-primary: #5c372b;
-  --color-brand-primary-dark: #42241b;
-  --color-brand-primary-light: #7c4b3c;
-  --color-brand-secondary: #2d0b14;
-  --color-brand-secondary-dark: #1b050c;
-  --color-brand-accent: #d4af37;
-  --color-brand-accent-light: #f5e4a8;
-  --color-brand-accent-dark: #a88620;
-  --color-brand-surface: #fdfbf7;
-  --color-brand-surface-warm: #f7f1e7;
-  --color-brand-charcoal: #1c1917;
-
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --color-brand-primary: #795744;
+  --color-brand-primary-dark: #563c2e;
+  --color-brand-primary-light: #98745b;
+  --color-brand-secondary: #f8f3e9;
+  --color-brand-accent: #c96f4a;
+  --color-brand-ink: #2e2925;
+  --color-brand-line: #d9cbbb;
+  --font-serif: Georgia, 'Times New Roman', serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
+:root {
   font-family: var(--font-sans);
-  background-color: #faf6f0;
-  color: #1c1917;
+  color: var(--color-brand-ink);
+  background: var(--color-brand-secondary);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
 }
 
-/* Keyframes for animations */
-@keyframes cartShake {
-  0% { transform: scale(1) rotate(0deg); }
-  15% { transform: scale(1.15) rotate(-12deg); }
-  30% { transform: scale(1.15) rotate(12deg); }
-  45% { transform: scale(1.15) rotate(-12deg); }
-  60% { transform: scale(1.15) rotate(12deg); }
-  75% { transform: scale(1.05) rotate(-6deg); }
-  100% { transform: scale(1) rotate(0deg); }
+html { scroll-behavior: smooth; background: var(--color-brand-secondary); }
+body { margin: 0; min-width: 320px; background: var(--color-brand-secondary); }
+button, a { -webkit-tap-highlight-color: transparent; }
+
+/* Brand texture: quiet paper grain without adding a new color. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+  z-index: 100;
 }
 
-@keyframes goldShimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--color-brand-secondary); }
+::-webkit-scrollbar-thumb { background: var(--color-brand-primary); border-radius: 0; }
+
+/* Existing component hooks, translated into the logo's cocoa / ivory / coral system. */
+nav { background: var(--color-brand-primary-dark) !important; border-color: rgba(248,243,233,.2) !important; box-shadow: none !important; }
+nav a, nav button { border-radius: 2px !important; }
+nav img { background: var(--color-brand-primary) !important; border-color: rgba(248,243,233,.35) !important; }
+main, #root { background: transparent; }
+
+.hero-shell { background: var(--color-brand-primary) !important; }
+footer { background: var(--color-brand-primary-dark) !important; border-color: rgba(248,243,233,.2) !important; }
+
+@keyframes cartShake { 0%,100% { transform: rotate(0); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
+.animate-cart-shake { animation: cartShake .6s ease-in-out infinite; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(1.015); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-@keyframes pulseGlow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
-}
-
-.animate-cart-shake {
-  animation: cartShake 0.6s ease-in-out infinite;
-}
-
-.animate-gold-shimmer {
-  background: linear-gradient(90deg, #d4af37 0%, #fff6d6 50%, #d4af37 100%);
-  background-size: 200% 100%;
-  animation: goldShimmer 3s infinite linear;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.gold-border-glow {
-  box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
-}
-
-.gold-hover-ring {
-  transition: all 0.3s ease;
-}
-
-.gold-hover-ring:hover {
-  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.6), 0 8px 25px rgba(92, 55, 43, 0.15);
-}
-
-/* Custom Luxury Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f7f1e7;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #a88620;
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #5c372b;
+@media (max-width: 640px) {
+  body::before { opacity: .02; }
 }

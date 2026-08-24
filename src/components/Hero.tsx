@@ -1,217 +1,52 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import LuxuryImage from './LuxuryImage';
-import { FiArrowRight, FiStar, FiCheckCircle } from 'react-icons/fi';
+import { FiArrowUpRight, FiCheck } from 'react-icons/fi';
+
+const slides = [
+  { image: '/saree-campaign.png', label: 'The new season', title: 'A row of stories, woven for you.' },
+  { image: '/saree-slide-2.png', label: 'Katan silk', title: 'Quiet sheen. Certain presence.' },
+  { image: '/saree-slide-3.png', label: 'Jamdani', title: 'Air-light artistry from the loom.' },
+  { image: '/saree-slide-4.png', label: 'Festive edit', title: 'Colour for the days you remember.' },
+  { image: '/saree-slide-5.png', label: 'Everyday heirlooms', title: 'Softly made for a life well lived.' },
+];
+
+const categories = [
+  { name: 'Katan', detail: 'Silk with a quiet sheen' },
+  { name: 'Jamdani', detail: 'Woven stories from Dhaka' },
+  { name: 'Rajshahi Silk', detail: 'The riverland classic' },
+  { name: 'Bridal Collection', detail: 'For days held close' },
+];
 
 export default function Hero() {
   const navigate = useNavigate();
-
-  // Highlight tags for auto-sliding banner badge
-  const highlightTags = [
-    'Authentic Dhakai Jamdani',
-    'Pure Handloom Katan Silk',
-    'Rajshahi Heritage Silk',
-    'Bespoke Muslin & Organza',
-    'Royal Bridal Collection',
-  ];
-
-  const [activeTagIndex, setActiveTagIndex] = useState(0);
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveTagIndex((prev) => (prev + 1) % highlightTags.length);
-    }, 3200);
-    return () => clearInterval(interval);
+    const timer = window.setInterval(() => setActive((current) => (current + 1) % slides.length), 2500);
+    return () => window.clearInterval(timer);
   }, []);
 
-  const sareeCategories = [
-    { name: 'Katan', icon: '✨', count: '45+ Weaves' },
-    { name: 'Jamdani', icon: '🪡', count: '60+ Weaves' },
-    { name: 'Rajshahi Silk', icon: '🧣', count: '30+ Weaves' },
-    { name: 'Georgette', icon: '🌸', count: '25+ Weaves' },
-    { name: 'Muslin', icon: '👑', count: '20+ Weaves' },
-    { name: 'Bridal Collection', icon: '💍', count: '35+ Weaves' },
-  ];
-
-  // Featured Saree Photography for the Multi-Image Mosaic Banner
-  const collageImages = [
-    {
-      url: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?q=80&w=1000&auto=format&fit=crop',
-      title: 'Handcrafted Jamdani',
-      subtitle: 'Traditional Motif',
-      aspect: 'col-span-2 row-span-2 h-64 sm:h-80 md:h-96',
-    },
-    {
-      url: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=800&auto=format&fit=crop',
-      title: 'Katan Silk',
-      subtitle: 'Royal Zaridozi',
-      aspect: 'col-span-1 row-span-1 h-32 sm:h-40 md:h-48',
-    },
-    {
-      url: 'https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?q=80&w=800&auto=format&fit=crop',
-      title: 'Rajshahi Silk',
-      subtitle: 'Pure Elegance',
-      aspect: 'col-span-1 row-span-1 h-32 sm:h-40 md:h-48',
-    },
-  ];
+  const slide = slides[active];
 
   return (
-    <section className="relative w-full max-w-7xl mx-auto my-4 sm:my-8 rounded-3xl overflow-hidden bg-gradient-to-b from-stone-950 via-stone-900 to-rose-950 text-stone-100 shadow-2xl border border-amber-500/20">
-      
-      {/* Decorative Background Lighting & Ambient Orbs */}
-      <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-96 h-96 bg-rose-600/15 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="px-5 py-8 sm:px-10 sm:py-14 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-center relative z-10">
-        
-        {/* LEFT COLUMN: BRAND PROMISE & ACTIONS */}
-        <div className="lg:col-span-7 flex flex-col items-start text-left">
-          
-          {/* AUTO-SLIDING FLOATING BADGE */}
-          <div className="inline-flex items-center gap-2.5 bg-stone-900/90 backdrop-blur-md border border-amber-400/40 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase mb-6 text-amber-300 shadow-md">
-            <FiStar className="w-4 h-4 text-amber-400 animate-pulse shrink-0 fill-amber-400" />
-            <div className="h-5 overflow-hidden relative min-w-[200px] sm:min-w-[240px]">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={activeTagIndex}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute inset-0 flex items-center text-amber-200"
-                >
-                  {highlightTags[activeTagIndex]}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-          </div>
-
-          {/* MAIN SERIF HEADLINE */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight leading-[1.15] bg-gradient-to-r from-amber-100 via-stone-100 to-amber-300 bg-clip-text text-transparent">
-            Bengali Heritage & Timeless Saree Artistry
-          </h1>
-
-          {/* SUBTITLE */}
-          <p className="mt-4 text-sm sm:text-base text-stone-300/90 font-sans font-medium leading-relaxed max-w-xl">
-            Immerse yourself in authentic Dhakai Jamdani, pure Katan Silk, and handcrafted Rajshahi Muslin. Each piece is meticulously woven by master artisans across Bangladesh.
-          </p>
-
-          {/* DYNAMIC CTA BUTTONS */}
-          <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 w-full sm:w-auto">
-            <button
-              onClick={() => navigate('/products')}
-              className="px-8 py-4 bg-gradient-to-r from-amber-500 via-amber-400 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-sans font-extrabold text-xs sm:text-sm uppercase tracking-wider rounded-2xl transition-all duration-300 active:scale-95 shadow-xl shadow-amber-500/20 flex items-center justify-center gap-2.5 cursor-pointer group gold-hover-ring"
-            >
-              <span>Explore New Arrivals</span>
-              <FiArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-            </button>
-
-            <button
-              onClick={() => navigate('/category/jamdani')}
-              className="px-7 py-4 bg-stone-900/80 hover:bg-stone-800 text-stone-200 hover:text-amber-200 border border-stone-700/80 hover:border-amber-400/50 font-sans font-bold text-xs sm:text-sm uppercase tracking-wider rounded-2xl transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <span>Shop Collection</span>
-            </button>
-          </div>
-
-          {/* REASSURANCE BADGES */}
-          <div className="mt-8 pt-6 border-t border-stone-800/80 flex flex-wrap items-center gap-4 text-xs text-stone-400">
-            <span className="flex items-center gap-1.5">
-              <FiCheckCircle className="text-amber-400" /> 100% Handloom Guarantee
-            </span>
-            <span className="flex items-center gap-1.5">
-              <FiCheckCircle className="text-amber-400" /> Cash on Delivery Nationwide
-            </span>
-          </div>
-
+    <section className="hero-shell relative mx-auto my-3 flex min-h-[calc(100svh-5rem)] w-full max-w-7xl flex-col overflow-hidden bg-brand-primary text-brand-secondary shadow-xl sm:my-4 lg:my-5 lg:min-h-[calc(100svh-7rem)]">
+      <div className="grid flex-1 items-stretch lg:grid-cols-[.82fr_1.18fr]">
+        <div className="flex flex-col justify-center px-5 py-8 sm:px-12 sm:py-12 lg:px-14 lg:py-10">
+          <p className="mb-7 flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.28em] text-brand-secondary/75"><span className="h-px w-10 bg-brand-secondary/60" />Bengali sarees, thoughtfully chosen</p>
+          <h1 className="max-w-xl font-serif text-4xl font-normal leading-[1.08] tracking-[-.04em] text-balance sm:text-6xl">Sarees with a story in every thread.</h1>
+          <p className="mt-6 max-w-lg text-sm leading-7 text-brand-secondary/80 sm:text-base">Discover handpicked Bengali sarees shaped by patient looms, graceful drapes, and motifs passed from one generation to the next.</p>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row"><button onClick={() => navigate('/products')} className="group inline-flex items-center justify-center gap-3 bg-brand-secondary px-6 py-3.5 text-xs font-bold uppercase tracking-[.16em] text-brand-primary-dark transition hover:bg-white">Explore the collection <FiArrowUpRight className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" /></button><button onClick={() => navigate('/category/jamdani')} className="inline-flex items-center justify-center border border-brand-secondary/50 px-6 py-3.5 text-xs font-bold uppercase tracking-[.16em] text-brand-secondary transition hover:bg-brand-secondary/10">Discover Jamdani</button></div>
+          <div className="mt-10 flex flex-wrap gap-x-6 gap-y-3 border-t border-brand-secondary/20 pt-5 text-[11px] font-medium text-brand-secondary/75"><span className="flex items-center gap-2"><FiCheck /> Handloom verified</span><span className="flex items-center gap-2"><FiCheck /> Made across Bangladesh</span></div>
         </div>
-
-        {/* RIGHT COLUMN: MULTI-IMAGE SAREE MOSAIC COLLAGE */}
-        <div className="lg:col-span-5 w-full">
-          <div className="grid grid-cols-2 gap-3 relative p-2 rounded-3xl bg-stone-900/60 border border-amber-500/10 backdrop-blur-xs">
-            
-            {/* MOSAIC IMAGE 1 (Main Big Feature) */}
-            <div className="col-span-2 relative rounded-2xl overflow-hidden group shadow-lg h-56 sm:h-64 border border-amber-400/20">
-              <LuxuryImage
-                src={collageImages[0].url}
-                alt={collageImages[0].title}
-                aspectRatio="aspect-auto"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent opacity-80" />
-              <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between">
-                <div>
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-500/30">
-                    Featured Motif
-                  </span>
-                  <h3 className="font-serif text-lg font-bold text-stone-100 mt-1">
-                    {collageImages[0].title}
-                  </h3>
-                </div>
-                <span className="text-xs text-stone-300 font-sans bg-stone-900/80 px-2.5 py-1 rounded-lg border border-stone-700">
-                  {collageImages[0].subtitle}
-                </span>
-              </div>
-            </div>
-
-            {/* MOSAIC IMAGE 2 */}
-            <div className="col-span-1 relative rounded-2xl overflow-hidden group shadow-md h-36 sm:h-44 border border-stone-800">
-              <LuxuryImage
-                src={collageImages[1].url}
-                alt={collageImages[1].title}
-                aspectRatio="aspect-auto"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent opacity-75" />
-              <div className="absolute bottom-2 left-3">
-                <p className="font-serif text-xs font-bold text-amber-200">{collageImages[1].title}</p>
-                <p className="text-[9px] text-stone-400 uppercase tracking-wider">{collageImages[1].subtitle}</p>
-              </div>
-            </div>
-
-            {/* MOSAIC IMAGE 3 */}
-            <div className="col-span-1 relative rounded-2xl overflow-hidden group shadow-md h-36 sm:h-44 border border-stone-800">
-              <LuxuryImage
-                src={collageImages[2].url}
-                alt={collageImages[2].title}
-                aspectRatio="aspect-auto"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent opacity-75" />
-              <div className="absolute bottom-2 left-3">
-                <p className="font-serif text-xs font-bold text-amber-200">{collageImages[2].title}</p>
-                <p className="text-[9px] text-stone-400 uppercase tracking-wider">{collageImages[2].subtitle}</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-
-      {/* QUICK JUMP CATEGORY ANCHORS BAR */}
-      <div className="w-full bg-stone-950/80 border-t border-stone-800 px-6 py-5">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-[11px] font-sans font-bold uppercase tracking-widest text-amber-300/80 shrink-0">
-            Signature Weaves & Categories:
-          </span>
-
-          <div className="flex flex-wrap items-center justify-center md:justify-end gap-2 w-full">
-            {sareeCategories.map((cat) => (
-              <button
-                key={cat.name}
-                onClick={() => navigate(`/category/${encodeURIComponent(cat.name.toLowerCase())}`)}
-                className="flex items-center gap-2 px-3.5 py-2 bg-stone-900 hover:bg-stone-800 border border-stone-800 hover:border-amber-400/40 rounded-xl text-xs font-bold transition-all duration-200 active:scale-95 cursor-pointer text-stone-200 hover:text-amber-300"
-              >
-                <span>{cat.icon}</span>
-                <span>{cat.name}</span>
-              </button>
-            ))}
-          </div>
+        <div className="relative h-[34svh] min-h-[230px] overflow-hidden bg-brand-secondary sm:h-[42svh] lg:h-auto lg:min-h-0 lg:max-h-none">
+          <img key={slide.image} src={slide.image} alt={`${slide.label} saree collection`} className="absolute inset-0 h-full w-full object-contain animate-[fadeIn_.7s_ease]" />
+          <div className="absolute inset-0 bg-brand-primary/10" />
+          <div className="absolute bottom-7 left-7 right-7 flex items-end justify-between sm:bottom-10 sm:left-10 sm:right-10"><div><p className="text-[10px] font-bold uppercase tracking-[.25em] text-white/80">{slide.label}</p><p className="mt-2 max-w-[260px] font-serif text-2xl leading-tight text-white">{slide.title}</p></div><div className="flex gap-1.5" aria-label="Saree campaign slides">{slides.map((item, index) => <button key={item.image} aria-label={`Show slide ${index + 1}`} aria-current={index === active} onClick={() => setActive(index)} className={`h-1.5 transition-all ${index === active ? 'w-8 bg-white' : 'w-2 bg-white/50'}`} />)}</div></div>
         </div>
       </div>
-
+      <div className="grid grid-cols-2 border-t border-brand-secondary/20 sm:grid-cols-4">{categories.map((category) => <button key={category.name} onClick={() => navigate(`/category/${encodeURIComponent(category.name.toLowerCase())}`)} className="group min-h-[98px] border-b border-r border-brand-secondary/20 px-4 py-4 text-left transition hover:bg-brand-primary-light focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-brand-secondary last:border-b-0 sm:min-h-0 sm:border-b-0 sm:px-5 sm:py-5 sm:last:border-r-0"><span className="font-serif text-base text-brand-secondary sm:text-lg">{category.name}</span><span className="mt-1 block text-[10px] leading-4 text-brand-secondary/65 group-hover:text-brand-secondary/90 sm:text-[11px] sm:leading-5">{category.detail}</span></button>)}</div>
     </section>
   );
 }
+
+// animation is intentionally subtle so the fabric remains the focus

@@ -171,7 +171,7 @@ export default function Navbar() {
                 </Link>
                 <Link
                   to="/register"
-                  className="text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 px-3.5 sm:px-4 py-2 rounded-xl shadow-md shadow-amber-500/20 transition active:scale-95"
+                  className="hidden sm:inline-flex text-xs font-bold uppercase tracking-wider bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 px-3.5 sm:px-4 py-2 rounded-xl shadow-md shadow-amber-500/20 transition active:scale-95"
                 >
                   Register
                 </Link>
@@ -190,7 +190,7 @@ export default function Navbar() {
             {/* CART TRIGGER BUTTON WITH COUNT & SHIVER EFFECT */}
             <Link
               to="/cart"
-              className={`relative flex items-center justify-center p-2.5 sm:p-3 rounded-xl transition-all duration-300 border shadow-md ${
+              className={`relative hidden items-center justify-center p-2.5 sm:flex sm:p-3 rounded-xl transition-all duration-300 border shadow-md ${
                 isShivering
                   ? 'bg-amber-400 border-amber-300 text-stone-950 scale-110 ring-4 ring-amber-400/40 animate-cart-shake'
                   : isActive('/cart')
