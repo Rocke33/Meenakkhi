@@ -15,7 +15,7 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Scroll position detector for enhanced glassmorphism header depth
+  // Scroll position detector
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -59,8 +59,8 @@ export default function Navbar() {
 
   const navLinks = [
     { name: 'Home', path: '/' },
-    { name: 'Saree Collections', path: '/products' },
-    { name: 'Top Sales', path: '/orders' },
+    { name: 'Saree Collection', path: '/products' },
+    { name: 'Top Sell', path: '/orders' },
     { name: 'My Profile', path: '/profile' },
   ];
 
@@ -69,36 +69,36 @@ export default function Navbar() {
       <nav
         className={`sticky top-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-stone-900/90 backdrop-blur-md border-b border-amber-500/20 shadow-lg text-stone-100 py-2.5'
-            : 'bg-stone-900/95 backdrop-blur-sm border-b border-stone-800 text-stone-100 py-3.5'
+            ? 'bg-stone-950/95 backdrop-blur-md border-b border-amber-500/25 shadow-xl text-stone-100 py-2.5'
+            : 'bg-stone-950/90 backdrop-blur-sm border-b border-stone-900 text-stone-100 py-3'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4">
           
           {/* BRAND LOGO */}
           <Link
             to="/"
-            className="group flex items-center gap-3 shrink-0 transition-transform duration-300 hover:scale-[1.02]"
+            className="group flex items-center gap-2.5 shrink-0 transition-transform duration-300 hover:scale-[1.02]"
           >
-            <div className="relative p-1 rounded-xl bg-gradient-to-br from-amber-500/20 via-rose-900/40 to-stone-900 border border-amber-400/30 group-hover:border-amber-400/60 shadow-xs">
+            <div className="relative p-1 rounded-xl bg-gradient-to-br from-amber-500/20 via-rose-950/60 to-stone-950 border border-amber-400/30 group-hover:border-amber-400/60 shadow-xs">
               <img
                 src="/logo.png"
                 alt="Meenakkhi Sarees Logo"
-                className="h-10 sm:h-12 w-auto object-contain rounded-lg filter drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+                className="h-9 sm:h-11 w-auto object-contain rounded-lg filter drop-shadow-md transition-transform duration-300 group-hover:scale-105"
               />
             </div>
-            <div className="hidden sm:flex flex-col">
-              <span className="font-serif text-lg md:text-xl font-bold tracking-tight bg-gradient-to-r from-amber-200 via-amber-100 to-amber-300 bg-clip-text text-transparent">
+            <div className="flex flex-col">
+              <span className="font-serif text-base sm:text-lg md:text-xl font-bold tracking-tight bg-gradient-to-r from-amber-200 via-amber-100 to-amber-300 bg-clip-text text-transparent">
                 মীনাক্ষী
               </span>
-              <span className="text-[9px] font-sans uppercase tracking-[0.25em] text-amber-300/80 -mt-1 font-semibold">
+              <span className="text-[8px] sm:text-[9px] font-sans uppercase tracking-[0.22em] text-amber-300/80 -mt-0.5 font-semibold">
                 Meenakkhi Sarees
               </span>
             </div>
           </Link>
 
           {/* DESKTOP NAV LINKS */}
-          <div className="hidden md:flex items-center gap-1 lg:gap-2 bg-stone-950/60 p-1.5 rounded-2xl border border-stone-800/80">
+          <div className="hidden md:flex items-center gap-1 lg:gap-2 bg-stone-900/80 p-1.5 rounded-2xl border border-stone-800/80">
             {navLinks.map((navItem) => {
               const active = isActive(navItem.path);
               return (
@@ -146,7 +146,7 @@ export default function Navbar() {
             <button
               onClick={() => navigate('/products')}
               title="Search Saree Collection"
-              className="hidden sm:flex items-center justify-center p-2.5 rounded-xl bg-stone-800/80 border border-stone-700/60 text-stone-300 hover:text-amber-300 hover:border-amber-500/40 transition active:scale-95 cursor-pointer"
+              className="hidden sm:flex items-center justify-center p-2.5 rounded-xl bg-stone-900/80 border border-stone-800 text-stone-300 hover:text-amber-300 hover:border-amber-500/40 transition active:scale-95 cursor-pointer"
             >
               <FiSearch className="w-4.5 h-4.5" />
             </button>
@@ -155,7 +155,7 @@ export default function Navbar() {
             <button
               onClick={() => navigate('/products')}
               title="Favorites & Wishlist"
-              className="hidden sm:flex items-center justify-center p-2.5 rounded-xl bg-stone-800/80 border border-stone-700/60 text-stone-300 hover:text-rose-400 hover:border-rose-500/40 transition active:scale-95 cursor-pointer"
+              className="hidden sm:flex items-center justify-center p-2.5 rounded-xl bg-stone-900/80 border border-stone-800 text-stone-300 hover:text-rose-400 hover:border-rose-500/40 transition active:scale-95 cursor-pointer"
             >
               <FiHeart className="w-4.5 h-4.5" />
             </button>
@@ -180,33 +180,33 @@ export default function Navbar() {
               <button
                 onClick={() => navigate('/profile')}
                 type="button"
-                className="flex items-center gap-2 bg-stone-800 hover:bg-stone-700 text-amber-200 text-xs font-bold rounded-xl px-3 py-2 border border-amber-500/30 max-w-[130px] sm:max-w-[160px] truncate shadow-2xs active:scale-95 transition cursor-pointer"
+                className="hidden sm:flex items-center gap-2 bg-stone-900 hover:bg-stone-800 text-amber-200 text-xs font-bold rounded-xl px-3 py-2 border border-amber-500/30 max-w-[130px] sm:max-w-[160px] truncate shadow-2xs active:scale-95 transition cursor-pointer"
               >
                 <FiUser className="w-3.5 h-3.5 shrink-0 text-amber-400" />
                 <span className="truncate">{displayName || user.email?.split('@')[0]}</span>
               </button>
             )}
 
-            {/* CART TRIGGER BUTTON WITH COUNT & SHIVER EFFECT */}
+            {/* CART TRIGGER BUTTON WITH COUNT & SHIVER EFFECT (VISIBLE ON MOBILE TOO) */}
             <Link
               to="/cart"
-              className={`relative hidden items-center justify-center p-2.5 sm:flex sm:p-3 rounded-xl transition-all duration-300 border shadow-md ${
+              className={`relative flex items-center justify-center p-2 sm:p-2.5 rounded-xl transition-all duration-300 border shadow-md ${
                 isShivering
                   ? 'bg-amber-400 border-amber-300 text-stone-950 scale-110 ring-4 ring-amber-400/40 animate-cart-shake'
                   : isActive('/cart')
                   ? 'bg-amber-500 border-amber-400 text-stone-950 font-bold'
-                  : 'bg-gradient-to-r from-rose-900 to-rose-950 border-rose-800/80 text-stone-100 hover:border-amber-400/50 hover:text-amber-200 active:scale-95'
+                  : 'bg-stone-900 border-stone-800 text-stone-100 hover:border-amber-400/50 hover:text-amber-200 active:scale-95'
               }`}
               title="Shopping Cart"
             >
-              <FiShoppingBag className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
+              <FiShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
 
               {/* Dynamic Badge displaying item count */}
               <span
-                className={`absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full px-1 text-[10px] font-black ring-2 transition-all duration-300 ${
+                className={`absolute -top-1.5 -right-1.5 flex h-4.5 min-w-[18px] sm:h-5 sm:min-w-[20px] items-center justify-center rounded-full px-1 text-[9px] sm:text-[10px] font-black ring-2 transition-all duration-300 ${
                   isShivering
                     ? 'bg-stone-950 text-amber-400 ring-amber-300 scale-125'
-                    : 'bg-amber-400 text-stone-950 ring-stone-900 scale-110'
+                    : 'bg-amber-400 text-stone-950 ring-stone-950 scale-110'
                 }`}
               >
                 {cartCount}
@@ -217,7 +217,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               type="button"
-              className="md:hidden p-2.5 rounded-xl bg-stone-800 text-stone-200 hover:text-amber-300 border border-stone-700 transition active:scale-95 cursor-pointer flex items-center justify-center shrink-0"
+              className="md:hidden p-2 rounded-xl bg-stone-900 text-stone-200 hover:text-amber-300 border border-stone-800 transition active:scale-95 cursor-pointer flex items-center justify-center shrink-0"
               aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? <FiX className="w-5 h-5" /> : <FiMenu className="w-5 h-5" />}
@@ -236,7 +236,7 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="fixed inset-0 bg-stone-950/80 backdrop-blur-sm z-50 md:hidden"
+              className="fixed inset-0 bg-stone-950/85 backdrop-blur-md z-50 md:hidden"
             />
 
             {/* Drawer */}
@@ -244,61 +244,66 @@ export default function Navbar() {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 280 }}
-              className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-stone-900 border-l border-amber-500/20 shadow-2xl z-50 md:hidden flex flex-col justify-between p-6 overflow-y-auto"
+              transition={{ type: 'spring', damping: 28, stiffness: 300 }}
+              className="fixed top-0 right-0 bottom-0 w-[85%] max-w-xs bg-stone-950 border-l border-amber-500/20 shadow-2xl z-50 md:hidden flex flex-col justify-between p-5 overflow-y-auto"
             >
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-5">
                 {/* Drawer Header */}
-                <div className="flex items-center justify-between border-b border-stone-800 pb-4">
-                  <div className="flex items-center gap-3">
-                    <img src="/logo.png" alt="Meenakkhi" className="h-10 w-auto rounded-lg" />
+                <div className="flex items-center justify-between border-b border-stone-800 pb-3.5">
+                  <div className="flex items-center gap-2.5">
+                    <img src="/logo.png" alt="Meenakkhi" className="h-9 w-auto rounded-lg" />
                     <div>
-                      <h3 className="font-serif text-amber-200 font-bold text-base">মীনাক্ষী</h3>
-                      <p className="text-[9px] uppercase tracking-widest text-amber-400/80 font-semibold">Luxury Sarees</p>
+                      <h3 className="font-serif text-amber-200 font-bold text-sm">মীনাক্ষী Sarees</h3>
+                      <p className="text-[9px] uppercase tracking-widest text-amber-400/80 font-semibold">Boutique Menu</p>
                     </div>
                   </div>
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 rounded-lg bg-stone-800 text-stone-300 hover:text-white"
+                    className="p-2 rounded-xl bg-stone-900 text-stone-300 hover:text-white border border-stone-800"
+                    aria-label="Close navigation menu"
                   >
-                    <FiX className="w-5 h-5" />
+                    <FiX className="w-4.5 h-4.5" />
                   </button>
                 </div>
 
                 {/* Nav Links */}
-                <div className="flex flex-col gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-stone-400 px-2">Navigation</span>
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-[9px] font-bold uppercase tracking-widest text-stone-400 px-2 mb-1">
+                    Explore Navigation
+                  </span>
+                  
                   {navLinks.map((navItem) => {
                     const active = isActive(navItem.path);
                     return (
                       <Link
                         key={navItem.path}
                         to={navItem.path}
-                        className={`flex items-center justify-between min-h-[48px] px-4 rounded-xl text-sm font-bold transition-all ${
+                        className={`flex items-center justify-between min-h-[44px] px-4 rounded-xl text-sm font-bold transition-all ${
                           active
-                            ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
-                            : 'text-stone-300 hover:bg-stone-800 hover:text-amber-200'
+                            ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30 shadow-xs'
+                            : 'text-stone-300 hover:bg-stone-900 hover:text-amber-200'
                         }`}
                       >
                         <span>{navItem.name}</span>
-                        <FiArrowRight className="w-4 h-4 text-stone-500" />
+                        <FiArrowRight className={`w-3.5 h-3.5 ${active ? 'text-amber-400' : 'text-stone-600'}`} />
                       </Link>
                     );
                   })}
 
+                  {/* Admin Option in Mobile Menu */}
                   <Link
                     to="/admin"
-                    className={`flex items-center justify-between min-h-[48px] px-4 rounded-xl text-sm font-extrabold transition-all border mt-2 ${
+                    className={`flex items-center justify-between min-h-[44px] px-4 rounded-xl text-sm font-extrabold transition-all border mt-1 ${
                       isActive('/admin')
-                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                        : 'bg-amber-950/40 text-amber-400 border-amber-800/40 hover:bg-amber-900/40'
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-xs'
+                        : 'bg-amber-950/30 text-amber-400/90 border-amber-800/40 hover:bg-amber-900/40'
                     }`}
                   >
                     <div className="flex items-center gap-2">
-                      <FiShield className="w-4 h-4" />
-                      <span>Admin Portal</span>
+                      <FiShield className="w-4 h-4 text-amber-400" />
+                      <span>Admin</span>
                     </div>
-                    <FiArrowRight className="w-4 h-4 text-amber-500" />
+                    <FiArrowRight className="w-3.5 h-3.5 text-amber-500" />
                   </Link>
                 </div>
               </div>
@@ -309,19 +314,19 @@ export default function Navbar() {
                   <div className="grid grid-cols-2 gap-2">
                     <Link
                       to="/login"
-                      className="flex items-center justify-center min-h-[44px] rounded-xl border border-stone-700 text-stone-300 font-bold text-xs uppercase"
+                      className="flex items-center justify-center min-h-[42px] rounded-xl border border-stone-700 text-stone-300 font-bold text-xs uppercase hover:bg-stone-900"
                     >
                       Sign In
                     </Link>
                     <Link
                       to="/register"
-                      className="flex items-center justify-center min-h-[44px] rounded-xl bg-amber-500 text-stone-950 font-bold text-xs uppercase"
+                      className="flex items-center justify-center min-h-[42px] rounded-xl bg-amber-500 text-stone-950 font-bold text-xs uppercase hover:bg-amber-400"
                     >
                       Register
                     </Link>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between bg-stone-800/80 p-3 rounded-xl border border-stone-700">
+                  <div className="flex items-center justify-between bg-stone-900 p-3 rounded-xl border border-stone-800">
                     <div className="flex items-center gap-2.5 truncate">
                       <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400">
                         <FiUser className="w-4 h-4" />

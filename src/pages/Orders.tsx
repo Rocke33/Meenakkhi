@@ -86,25 +86,25 @@ export default function Orders() {
                 📉 No saree purchase metrics logged yet. Check back later once orders are completed!
               </div>
             ) : (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6">
+              <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1.5 sm:gap-4 md:gap-6">
                 {topProducts.map((prod, idx) => (
                   <div
                     key={prod.id}
                     onClick={() => navigate(`/product/${prod.id}`)}
-                    className="bg-white border border-rose-100 rounded-2xl p-3 sm:p-4 flex flex-col relative shadow-2xs hover:shadow-lg transition duration-200 cursor-pointer group"
+                    className="bg-white border border-stone-200/90 rounded-xl sm:rounded-2xl p-2 sm:p-3.5 flex flex-col relative shadow-2xs hover:shadow-lg transition duration-200 cursor-pointer group"
                   >
                     {/* Rank Badge */}
-                    <span className="absolute top-3 left-3 z-10 bg-rose-950 text-amber-200 text-[9px] font-black px-2 py-0.5 rounded-md font-mono">
+                    <span className="absolute top-2 left-2 z-10 bg-stone-950 text-amber-200 text-[8px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-md font-mono">
                       #{idx + 1}
                     </span>
 
                     {/* Sales Badge */}
-                    <span className="absolute top-3 right-3 z-10 bg-rose-100 text-rose-900 text-[9px] font-black px-2 py-0.5 rounded-md font-mono">
+                    <span className="absolute top-2 right-2 z-10 bg-rose-100 text-rose-900 text-[8px] sm:text-[9px] font-black px-1.5 py-0.5 rounded-md font-mono">
                       {prod.unitsSold} Sold
                     </span>
 
                     {/* Image */}
-                    <div className="h-36 sm:h-44 w-full rounded-xl bg-rose-50/40 flex items-center justify-center p-2 mb-3 overflow-hidden mt-5">
+                    <div className="h-28 sm:h-44 w-full rounded-lg sm:rounded-xl bg-stone-50 flex items-center justify-center p-1 sm:p-2 mb-2 sm:mb-3 overflow-hidden mt-4">
                       <img
                         src={prod.image_url}
                         alt={prod.product_name}
@@ -115,16 +115,16 @@ export default function Orders() {
                     {/* Details */}
                     <div className="flex flex-col flex-1 min-w-0">
                       <h4
-                        className="text-xs font-bold text-rose-950 line-clamp-2 leading-snug tracking-tight mb-2"
+                        className="text-[11px] sm:text-xs font-bold text-stone-950 line-clamp-2 leading-tight tracking-tight mb-1"
                         title={prod.product_name}
                       >
                         {prod.product_name}
                       </h4>
-                      <div className="mt-auto pt-2 flex justify-between items-center border-t border-rose-50">
-                        <span className="text-xs font-black text-rose-950 font-mono">
+                      <div className="mt-auto pt-1.5 flex justify-between items-center border-t border-stone-100">
+                        <span className="text-xs sm:text-sm font-black text-stone-950 font-mono">
                           {formatBDT(prod.price)}
                         </span>
-                        <span className="text-[10px] text-rose-700 font-bold opacity-0 group-hover:opacity-100 transition">
+                        <span className="text-[9px] text-amber-800 font-bold hidden sm:inline opacity-0 group-hover:opacity-100 transition">
                           View →
                         </span>
                       </div>

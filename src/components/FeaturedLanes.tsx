@@ -60,7 +60,7 @@ export default function FeaturedLanes({ products, categories, limitProducts }: F
           </div>
 
           {/* RESPONSIVE ROW GRID */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 min-[2000px]:grid-cols-5 gap-4 sm:gap-6 w-full">
+          <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 min-[2000px]:grid-cols-5 gap-1.5 sm:gap-4 md:gap-6 w-full">
             {lane.products.map((item, index) => (
               <div
                 key={item.id}

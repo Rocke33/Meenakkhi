@@ -95,23 +95,25 @@ export default function Products() {
         </div>
 
         {/* Filter Pills */}
-        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 bg-white p-4 rounded-2xl border border-rose-100 shadow-xs mb-8">
-          <span className="text-[11px] font-black uppercase tracking-wider text-rose-900 mr-2 hidden sm:inline">
+        <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 bg-white p-3.5 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs mb-8">
+          <span className="text-[11px] font-black uppercase tracking-wider text-stone-900 mr-2 hidden sm:inline">
             Weave Filter:
           </span>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className={`text-[11px] sm:text-xs font-bold px-4 py-2 rounded-xl border transition-all duration-200 cursor-pointer ${
-                selectedCategory === cat
-                  ? 'bg-rose-900 text-white border-rose-900 shadow-xs'
-                  : 'bg-rose-50/50 text-gray-700 border-rose-100 hover:bg-rose-100/60'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-1.5 sm:gap-2">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                className={`text-[11px] sm:text-xs font-bold px-3.5 py-2 rounded-xl border transition-all duration-200 cursor-pointer ${
+                  selectedCategory === cat
+                    ? 'bg-stone-950 text-amber-300 border-amber-500/40 shadow-xs'
+                    : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100 hover:border-amber-500/30'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="w-full">

@@ -148,19 +148,21 @@ export default function Home() {
 
         {/* Category Filter Pills */}
         <section className="my-6 sm:my-8" aria-label="Saree categories">
-          <div className="flex flex-col gap-3 border-y border-brand-line/70 py-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-2">
-            <p className="px-1 text-[10px] font-bold uppercase tracking-[.22em] text-brand-primary-dark sm:mr-2">Shop by weave</p>
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-center">
+          <div className="flex flex-wrap items-center justify-center gap-2 bg-white p-3.5 sm:p-5 rounded-2xl border border-stone-200/90 shadow-2xs">
+            <span className="text-[11px] font-black uppercase tracking-wider text-stone-900 mr-2 hidden sm:inline">
+              Shop by Weave:
+            </span>
+            <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
               {categoriesList.map((category) => {
                 const active = selectedCategory === category;
                 return (
                   <button
                     key={category}
                     onClick={() => handleCategorySelect(category)}
-                    className={`min-h-11 rounded-sm border px-3 py-2 text-left text-[10px] font-bold uppercase tracking-[.12em] transition-all duration-200 cursor-pointer sm:px-4 sm:text-center ${
+                    className={`text-[11px] sm:text-xs font-bold px-3.5 py-2 rounded-xl border transition-all duration-200 cursor-pointer ${
                       active
-                        ? 'border-brand-primary-dark bg-brand-primary-dark text-brand-secondary shadow-[3px_3px_0_var(--color-brand-accent)]'
-                        : 'border-brand-line bg-brand-secondary text-brand-primary-dark hover:-translate-y-0.5 hover:border-brand-accent hover:text-brand-accent'
+                        ? 'bg-stone-950 text-amber-300 border-amber-500/40 shadow-xs'
+                        : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100 hover:border-amber-500/30'
                     }`}
                   >
                     {category}
